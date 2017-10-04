@@ -1,0 +1,6 @@
+[run]
+branch = True
+source = eris
+
+[report]
+ignore_errors = True
