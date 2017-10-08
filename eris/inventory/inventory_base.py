@@ -26,7 +26,7 @@ def _serialize_set(set_obj):
         raise TypeError(' %s is not a set' % str(set_obj.__type__))
 
 
-class InventoryBase(object):
+class ErisInventoryBase(object):
 
     def __init__(self):
         """

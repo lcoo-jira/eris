@@ -48,7 +48,7 @@ class InventoryBaseTestCase(base.TestCase):
         # create a new inventory from the dummy
         # serialize it
         # check if the json strings match
-        ib = inventory_base.InventoryBase()
+        ib = inventory_base.ErisInventoryBase()
 
         ib.add_host("some_vm1")
         ib.add_var_to_host("some_vm1", "var1", "val1")
