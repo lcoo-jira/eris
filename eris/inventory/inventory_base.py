@@ -12,25 +12,6 @@ not very well documented.
 import json
 
 
-def _serialize_set(set_obj):
-    """
-    Serialize a set object into a json array
-    :param set_obj: The set object to serialize into a JSON array
-    :type set_obj: set
-    :returns: The list representation of the set
-    :rtype: list
-    :raises TypeError: If the input type is not a set
-    """
-
-    if set_obj is None:
-        return list()
-
-    if isinstance(set_obj, set):
-        return list(set_obj)
-    else:
-        raise TypeError(' %s is not a set' % str(set_obj.__type__))
-
-
 class ErisInventoryBase(object):
 
     def __init__(self):
@@ -190,8 +171,17 @@ class ErisInventoryBase(object):
         """
 
         # The only non json serializable element is the set
-        # for which the default is provided.
-        return json.dumps(self.inventory, default=_serialize_set)
+        # for which the default is provided by overriding
+        # the encoder class.
+        class InventoryEncoder(json.JSONEncoder):
+            def default(self, obj):
+                if isinstance(obj, set):
+                    return list(obj)
+                else:
+                    return super(InventoryEncoder, self).default(obj)
+
+        return json.dumps(self.inventory,
+                          cls=InventoryEncoder)
 
     def create_inventory(self):
         """

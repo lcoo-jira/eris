@@ -74,7 +74,7 @@ DUMMY_DEPLOYMENT_MAP = [
     }, 
     {
         "name": "haprsre102", 
-        "groups": "haproxy", 
+        "groups": ["haproxy",], 
         "ip": "172.24.91.121", 
         "mac": "52:54:00:da:bf:8d", 
         "type": "vm"
@@ -250,6 +250,7 @@ class ErisFileinvTest(base.TestCase):
         # First pass
         # Make sure JSON is good
         invstr_dict = json.loads(invstr)
+        print invstr_dict
 
         # Second pass
         # Are all the hosts & groups in there?
