@@ -1,6 +1,11 @@
 
 """
 Base module and class for managing dynamic inventories
+We can either use this module and create dynamic
+inventories which are well documented or create
+inventory plugins as introduced in Ansible 2.4. But,
+the inventory plugins are very new and their working is
+not very well documented.
 """
 
 # System imports
@@ -26,7 +31,9 @@ def _serialize_set(set_obj):
         raise TypeError(' %s is not a set' % str(set_obj.__type__))
 
 
-class InventoryBase(object):
+# TODO: Look at Ansible inventory plugins and evaluate
+# if they are a better solution
+class ErisInventoryBase(object):
 
     def __init__(self):
         """
@@ -187,3 +194,12 @@ class InventoryBase(object):
         # The only non json serializable element is the set
         # for which the default is provided.
         return json.dumps(self.inventory, default=_serialize_set)
+
+    def create_inventory(self):
+        """
+        Method to override in subclass implementations
+        to create an inventory object with the functions
+        provided.
+        """
+
+        pass
