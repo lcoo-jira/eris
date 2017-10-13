@@ -31,8 +31,11 @@ def _serialize_set(set_obj):
         raise TypeError(' %s is not a set' % str(set_obj.__type__))
 
 
+<<<<<<< HEAD
 # TODO: Look at Ansible inventory plugins and evaluate
 # if they are a better solution
+=======
+>>>>>>> 8c222fdeb397f890d632cff9c2f557d580f1b72e
 class ErisInventoryBase(object):
 
     def __init__(self):
