@@ -94,7 +94,7 @@ class InventoryBaseTestCase(base.TestCase):
         self.assertEqual(json_dict['_meta'], dummy_dict['_meta'])
         jd_keys = json_dict.keys()
         dd_keys = dummy_dict.keys()
-        self.assertEqual(jd_keys, dd_keys)
+        self.assertEqual(set(jd_keys), set(dd_keys))
         for key in jd_keys:
             if key == '_meta':
                 continue

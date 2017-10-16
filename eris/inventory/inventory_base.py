@@ -181,7 +181,10 @@ class ErisInventoryBase(object):
                     return super(InventoryEncoder, self).default(obj)
 
         return json.dumps(self.inventory,
-                          cls=InventoryEncoder)
+                          cls=InventoryEncoder,
+                          indent=4,
+                          sort_keys=True,
+                          separators=(',', ': '))
 
     def create_inventory(self):
         """
