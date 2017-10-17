@@ -1,1 +1,2 @@
-#Sample test file
+# Sample test file
+pass
