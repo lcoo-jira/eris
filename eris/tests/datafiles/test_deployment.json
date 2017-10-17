@@ -1,15 +1,4 @@
 [
-    {	
-	"groups": [ "local" ],
-	"ip": "127.0.0.1",
-	"mac": "00:00:00:00:00:00",
-	"name": "localhost",
-	"type": "vm",
-	"ansible_ssh_variables": {
-		"ansible_connection": "local",
-		"ansible_become": "false"
-	}
-    },
     {
         "groups": [ "grpfuel" ],
 	"ip": "130.3.195.21",

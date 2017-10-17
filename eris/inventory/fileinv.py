@@ -15,7 +15,7 @@ class ErisAnsibleInventory(ErisInventoryBase):
 
         super(ErisAnsibleInventory, self).__init__(eris_config)
 
-    def _load_deployment_map(self, map_loc):
+    def _load_deployment_map(self):
         """
         Load a site deployment map. The site deployment is
         in the following configuration
@@ -34,9 +34,6 @@ class ErisAnsibleInventory(ErisInventoryBase):
             }
         }
 
-        :param map_loc: Fully qualified path of where \
-                to find the deployment map
-        :type map_loc: str
         :returns: List of dict objects
         :rtype: list
         :raises ValueError: Thrown when parsing JSON
@@ -45,6 +42,7 @@ class ErisAnsibleInventory(ErisInventoryBase):
         """
 
         deployment_map = None
+        map_loc = self.eris_config['openstack_deployment']['deployment_map']
         with open(map_loc, 'r') as fid:
             deployment_map = json.load(fid)
 
@@ -69,8 +67,15 @@ class ErisAnsibleInventory(ErisInventoryBase):
 
         # Now process the openstack deployment
         # Load the deployment map
-        dep_map_file = self.eris_config['openstack_deployment']['deployment_map']
-        deployment_map = self._load_deployment_map(dep_map_file)
+        deployment_map = self._load_deployment_map()
+
+        # Add in the localhost
+        self.add_group('local')
+        self.add_host('localhost')
+        self.add_var_to_host('localhost', 'ansible_host', '127.0.0.1')
+        self.add_var_to_host('localhost', 'ansible_become', 'false')
+        self.add_var_to_host('localhost', 'ansible_connection', 'local')
+        self.add_host_to_group('local', 'localhost')
 
         # Add in the root group
         # Everything is a part of the root group - or the deployment
