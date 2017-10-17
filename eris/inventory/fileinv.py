@@ -1,5 +1,3 @@
-#! /usr/bin/env python
-
 import json
 
 from eris.inventory.inventory_base import ErisInventoryBase
@@ -15,8 +13,7 @@ class ErisAnsibleInventory(ErisInventoryBase):
         :type eris_config: dict
         """
 
-        super(ErisAnsibleInventory, self).__init__()
-        self.eris_config = eris_config
+        super(ErisAnsibleInventory, self).__init__(eris_config)
 
     def _load_deployment_map(self, map_loc):
         """

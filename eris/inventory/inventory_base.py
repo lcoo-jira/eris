@@ -14,15 +14,19 @@ import json
 
 class ErisInventoryBase(object):
 
-    def __init__(self):
+    def __init__(self, eris_config):
         """
         Initialize the dynamic inventory - look at
         Ansible dynamic inventory specifications
         for more details. But at a minimum the _meta
         and hostvars are initialized
+
+        :param eris_config: The eris config data
+        :type eris_config: dict
         """
 
         self.inventory = dict(_meta=dict(hostvars=dict()))
+        self.eris_config = eris_config
 
     def group_exists(self, group_name):
         """
