@@ -135,7 +135,7 @@ class ErisAnsibleInventory(fileinv.ErisAnsibleInventory):
         fuel_node = dict(name='fuel',
                          groups=['grpfuel', ],
                          ip=fuel_node_config['ip'],
-                         mac=fuel_node_config,
+                         mac=fuel_node_config['mac'],
                          ansible_ssh_variables=fuel_node_config['ansible_ssh_variables'])
         new_node_list.append(fuel_node)
 
