@@ -53,7 +53,10 @@ class ErisAnsibleInventory(fileinv.ErisAnsibleInventory):
             fuel_inv_str = 'fuel_host '
             fuel_inv_str += 'ansible_host=' + fuel_config['ip'] + ' '
             for fuel_ansible_var, fuel_ansible_val in fuel_ansible_ssh.iteritems():
-                fuel_inv_str += fuel_ansible_var + '=' + fuel_ansible_val + ' '
+                quoted_val = fuel_ansible_val
+                if fuel_ansible_val.rfind(' ') >= 0:
+                    quoted_val = "'" + fuel_ansible_val + "'"
+                fuel_inv_str += fuel_ansible_var + '=' + quoted_val + ' '
 
             fid = open('/tmp/eris_fuel.ini', 'w')
             fid.write(fuel_inv_str)
