@@ -7,13 +7,14 @@ short_description: Executes rally commands
 
 '''
 def main():
-    fields = {
-          "scenario_file" : {"required": True, "type": "str"},
-          "scenario_args" : {"required" : False, "type": "str"},
-	   
-	}
+    module_args = dict(
+        name=dict(type='str', required=True),
+        command=dict(type='str', required=True)
+    )
+
     commands = {'create_db', 'create_deployment', 'check_deployment', 'start_task' , 'task_report' }
-    module = AnsibleModule(argument_spec={})
+    module = AnsibleModule(argument_spec=module_args)
+
     response = {"hello": "world"}
     module.exit_json(changed=False, meta=response)
 def create_db:
