@@ -1,5 +1,11 @@
 from ansible.module_utils.basic import *
 
+DOCUMENTATION = '''
+---
+module: rally
+short_description: Executes rally commands
+
+'''
 def main():
     fields = {
           "scenario_file" : {"required": True, "type": "str"},
