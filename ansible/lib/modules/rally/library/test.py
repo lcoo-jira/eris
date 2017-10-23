@@ -9,7 +9,7 @@ short_description: Executes rally commands
 def main():
     module_args = dict(
         command=dict(type='str', required=True),
-        command_args=dict(type='str', required=True)
+        command_args=dict(type='dict', required=True)
     )
 
     commands = {'create_db', 'create_deployment', 'check_deployment', 'start_task' , 'task_report' }
