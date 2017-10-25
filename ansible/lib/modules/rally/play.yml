@@ -2,6 +2,8 @@
 - hosts: localhost
   tasks:
   - name: Test module
-    test:
+    rally_mod:
+      command: "create_deployment"
+      command_args: {'name':'deji'}
     register: result
   - debug: var=result
