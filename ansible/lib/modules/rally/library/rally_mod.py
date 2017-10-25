@@ -12,27 +12,10 @@ def main():
         command_args=dict(type='dict', required=True)
     )
 
-    actions = {'create_db', 'create_deployment', 'check_deployment', 'start_task' , 'task_report',
-               'create_task_uuid'}
     module = AnsibleModule(argument_spec=module_args)
 
     response = {"hello": "world"}
     module.exit_json(changed=False, meta=response)
-"""def create_db:
-	pass
-
-def create_deployment:
-	pass
-
-def check_deployment:
-	pass
-
-def start_task:
-	pass
-
-def task_report:
-	pass
-"""
 
 if __name__ == '__main__':
     # CALL Rally loader

@@ -7,3 +7,7 @@
       command_args: {'name':'deji'}
     register: result
   - debug: var=result
+  - name: rally deployment
+    rally_deployment:
+      command: create
+    
