@@ -8,6 +8,7 @@ short_description: Executes rally commands
 '''
 def main():
     module_args = {
+                   "name": { type: "str", "required": True },
                    "command": {"choices" : ["create", "start", "abort", "delete", "check", "list", "recreate"] ,                              type: "str",
                             "require": True } 
                   }

@@ -10,8 +10,10 @@
 
   - name: rally deployment
     rally_deployment:
+      name: test-deploy
       command: create
 
   - name: Task create
     rally_task:
+      name: test-task
       command: create    
