@@ -6,6 +6,19 @@ module: rally
 short_description: Executes rally commands
 
 '''
+
+def create_task(data=None):
+   pass
+
+def delete_task(data=None):
+   pass
+
+def start_task(data=None):
+   pass
+
+def list_task(data=None):
+   pass
+
 def main():
     module_args = {
                    "name": { type: "str", "required": True },
