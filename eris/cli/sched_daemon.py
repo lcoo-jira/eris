@@ -6,6 +6,8 @@ import os
 import uuid
 import time
 import argparse
+import string
+import random
 
 # TODO: This whole file needs a whole bunch of logging
 # without logging we are blind to what's happening in there
@@ -20,7 +22,8 @@ class Job(object):
     is an inventory file, a module with arguments and
     time variables when to run the job and on which host.
     """
-
+    
+    INVALID = -1
     ONETIME = 1
     RECURRING = 2
 
@@ -29,7 +32,8 @@ class Job(object):
                  cmd,
                  run_at=None,
                  repeat=None,
-                 until=None):
+                 until=None,
+                 tag=None):
         """
         Create a one-time or a repetitive job
 
@@ -47,9 +51,6 @@ class Job(object):
         :type repeat: int
         :type until: int
         :returns: None
-        :raises ValueError: if repeat or until is specified \
-                without the other. If logger is None this is \
-                thrown as well.
         """
         
         current_time = time.time()
@@ -65,12 +66,22 @@ class Job(object):
         
         self.cmd = cmd
         self.run_at = current_time + run_at
-        self.repeat = repeat
-        self.until = current_time + until
 
-        self.id = uuid.uuid4()
-        self.outfile = os.path.join(outdir, str(self.id))
+        if self.jtype == Job.RECURRING:
+            self.repeat = repeat
+            self.until = current_time + until
+
+        self.tag = tag if tag is not None else self.cmd[0]
+        self.id = self._get_random_id()
+        self.outfile = os.path.join(outdir, self.id)
         self.popen = None
+
+    def _get_random_id(self):
+        rand_str_space = string.ascii_letters + string.digits
+        rand_list = random.sample(rand_str_space, 8)
+        rand_str = ''.join(rand_list)
+        rand_id = self.tag + '-' + rand_str
+        return rand_id
 
     def __eq__(self, another_job):
         return self.id == another_job.id if another_job is not None else False
@@ -80,6 +91,12 @@ class Job(object):
 
     def __hash__(self):
         return hash(self.id)
+
+    def __str__(self):
+        return self.id
+
+    def __repr__(self):
+        return self.id
 
     def recurring(self):
         """
@@ -199,9 +216,10 @@ class Job(object):
         # open in the child. That is exactly what the context does
         # It closes fid in the parent but the child process still has
         # it open and will close when complete.
-        with open(self.outfile, 'w+') as fid:
+        with open(self.outfile, 'a+') as fid:
             current_time = time.time()
-            header_string = '\n\n' + str(self.id) + ':' + str(current_time) + '\n'
+            header_string = '\n\n' + self.id + ':' + str(current_time) + '\n'
+            print 'RUNNING: ', str(self.cmd)
             fid.write(header_string)
             self.popen = subprocess.Popen(self.cmd, stdout=fid, stderr=fid)
 
@@ -269,6 +287,7 @@ class Scheduler(object):
                 with open(complete_path, 'r') as fid:
                     try:
                         file_value = json.load(fid)
+                        print 'LOADED: ', str(file_value)
                     except:
                         # Don't care if it fails.
                         # Ignore
@@ -284,10 +303,13 @@ class Scheduler(object):
                             file_value.get('cmd'),
                             file_value.get('run_at', None),
                             file_value.get('repeat', None),
-                            file_value.get('until', None))
+                            file_value.get('until', None),
+                            file_value.get('tag', None))
+                    print 'ADDING: ', str(j)
                     self.pending_jobs.add(j)
+                    print 'PENDING: ', str(self.pending_jobs)
                 elif file_value.get('type','something') == 'CMD':
-                    stop = True
+                    stop = self.run_cmd(file_value.get('command', 'something'))
                     break
                 else:
                     # Some junk - ignore
@@ -302,6 +324,29 @@ class Scheduler(object):
         # Stop all the jobs
         self.stop()
 
+    def run_cmd(self, cmd):
+        """
+        Run a specific command.
+        KILL: Kill all running processes and re-initialize
+        STOP: Shutdown process and exit
+
+        :param cmd: The command to run STOP or KILL
+        :type cmd: str
+        """
+       
+        stop_loop = False
+        self.stop()
+        if cmd == 'KILL':
+            self.running_jobs.clear()
+            self.pending_jobs.clear()
+        elif cmd == 'STOP':
+            stop_loop = True
+        else:
+            # Bad command
+            pass
+
+        return stop_loop
+
     def run_jobs(self):
         """
         Main task that selects and runs jobs
@@ -312,32 +357,42 @@ class Scheduler(object):
            2.1 Remove those
         3. Take the rest of the jobs, map them into a process pool of 10
         """
+
+        print 'PENDING: ', str(self.pending_jobs)
         
         # Step 1: Get all the finished jobs
         finished_jobs = set(filter(lambda j: j.started() and j.finished(), self.running_jobs))
+        print 'FINISHED: ', str(finished_jobs)
 
         # Step 2: Get all the recurring jobs that are finished
         recurring_jobs = set(filter(lambda j: j.recurring() and not j.expired(), finished_jobs))
+        print 'RECURRING: ', str(recurring_jobs)
         
         # Step 3: Remove the finished jobs from the running jobs
         self.running_jobs.difference_update(finished_jobs)
 
         # Step 4: Add the recurring jobs back to the pending jobs
         self.pending_jobs.update(recurring_jobs)
+        print 'PENDING NOW: ', str(self.pending_jobs)
         
         # Step 5: Get all the jobs that are ready to run
         jobs_to_run = set(filter(lambda j: j.ready(), self.pending_jobs))
+        print 'TO_RUN: ', str(jobs_to_run)
 
-        # Step 6: Remove the jobs ready to run from the pending jobs
+        # Step 6. Exclude jobs that are already running
+        jobs_to_run.difference_update(self.running_jobs)
+        print 'TO_RUN_1: ', str(jobs_to_run)
+
+        # Step 7: Remove the jobs ready to run from the pending jobs
         self.pending_jobs.difference_update(jobs_to_run)
 
-        # Step 7: Start all jobs ready to run
+        # Step 8: Start all jobs ready to run
         map(lambda j: j.run_job(), jobs_to_run)
 
-        # Step 8: Update the next run time. No effect for onetime jobs
+        # Step 9: Update the next run time. No effect for onetime jobs
         map(lambda j: j.set_next_run(), jobs_to_run)
 
-        # Step 9: Add the running jobs to the list of running jobs
+        # Step 10: Add the running jobs to the list of running jobs
         self.running_jobs.update(jobs_to_run)
 
 
@@ -377,5 +432,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-
