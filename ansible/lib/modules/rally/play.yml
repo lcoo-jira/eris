@@ -8,10 +8,16 @@
     register: result
   - debug: var=result
 
+  - name: rally database
+    rally_db:
+      name: test-db
+      command: create
+
   - name: rally deployment
     rally_deployment:
       name: test-deploy
       command: create
+      from: file
 
   - name: Task create
     rally_task:

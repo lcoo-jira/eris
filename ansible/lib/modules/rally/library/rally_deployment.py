@@ -15,13 +15,15 @@ def destroy_deployment(data=None):
     return False, False, meta
 
 def main():
-    module_args = { 
-                    "name": { type: "str", "required": True }, 
-                    "command": {"choices" : ["create", "destroy", "check", "list", "recreate"],
+    module_args = { "name" : { type: "str", "required": True }, 
+                    "command" : {
+                                "required": True,
                                 type: "str",
-                                "required": True
-                               }
+                                "choices" : ["create", "destroy", "check", "list", "recreate"],
+                               },
+                    "from" : {"requred": True, type: "str", "choices": ["file", "env"]}
                   }
+
     choice_map = {
                     "create" : create_deployment, 
                     "destroy": destroy_deployment
