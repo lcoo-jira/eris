@@ -1,4 +1,9 @@
+#! /usr/bin/env python 
+
 from ansible.module_utils.basic import *
+import sys
+
+from loader.rally_loader import RallyLoader
 
 DOCUMENTATION = '''
 ---

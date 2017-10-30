@@ -16,8 +16,10 @@ from rally.exceptions import RallyException
 from rally.exceptions import ValidationError
 from rally.plugins import load as load_rally_plugins
 from sqlalchemy.exc import OperationalError
-from voluptuous import Shcema, Required, Optional
+from voluptuous import Schema, Required, Optional
+from loader import BaseLoader
 
+CONF = cfg.CONF
 
 class RallyLoader(BaseLoader):
     schema = Schema({
@@ -39,13 +41,18 @@ class RallyLoader(BaseLoader):
                 Required("password"): str,
                 Required("name"): str
            })
+        })
+    conn_template = "mysql://{user}:{passwd}@{host}/{db_name}"
+    
+    scenarios_path = os.path.abspath(os.path.join(os.path.dirname(__file__),
+                                             "../../scenarios/rally"))
     def __init__(self, observer, openrc, inventory, **params):
        super(RallyLoader, self).__init__(oberver, openrc, inventory, **params)
-        self.scenario_file=os.path.abspath(os.path.join(
+       self.scenario_file=os.path.abspath(os.path.join(
            RallyLoader.scenarios_path, params['scenario_file']))
 
-        self.scenario_args_file=params.get('scenario_args_file', None)
-        if self.scenario_args_file:
+       self.scenario_args_file=params.get('scenario_args_file', None)
+       if self.scenario_args_file:
            self.scenario_args_file=os.path.abspath(os.path.join(
                RallyLoader.scenarios_path, self.scenario_args_file))
            self.start_delay=params['start_delay']
@@ -53,13 +60,13 @@ class RallyLoader(BaseLoader):
            self.deployment_config={
               "type": "ExistingCloud",
               "admin": {
-                  "username": openrc["username"]
-                  "password": openrc["password"]
+                  "username": openrc["username"],
+                  "password": openrc["password"],
                   "tenant_name": openrc["tenant_name"]
            },
            "auth_url": openrc["auth_url"],
            "region_name": openrc["auth_url"],
-           "https_insecure": openrc["https_insecure"]
+           "https_insecure": openrc["https_insecure"],
            "https_cacert": openrc["https_cacert"]
           }
            self.scenario_args=params.get('scenario_args', None)
@@ -73,8 +80,8 @@ class RallyLoader(BaseLoader):
                    passwd=params["db"]["pass"],
                    host=params["db"]["host"],
                    db_name=params["db"]["name"]
-
-               db_options.set_defaults[CONF, connection=db_connection)
+               )
+               db_options.set_defaults(CONF, connection=db_connection)
            try:
                rally_api.Deployment.get(self.deployment_name)
            except DBNotExistentTable as e:
