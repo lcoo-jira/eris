@@ -2,6 +2,7 @@ from ansible.module_utils.basic import *
 from rally import api as rally_api
 from rally.cli.commands.deployment import DeploymentCommands
 from rally.exceptions import DeploymentNotFound
+from rally.exceptions import RallyException
 
 DOCUMENTATION = '''
 ---

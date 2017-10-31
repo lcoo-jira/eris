@@ -39,6 +39,8 @@ def main():
                     "delete": delete_task
                  }
     module = AnsibleModule(argument_spec=module_args)
+    is_error, has_changed, result = choice_map.get(module.params['command'] )(module.params)
+
     
     if not is_error:
         module.exit_json(changed=False, meta=result )

@@ -3,9 +3,7 @@
 from ansible.module_utils.basic import *
 from rally import api as rally_api
 from rally.cli.commands.db import DBCommands
-
-#sys.path.append('home/dola/eris/ansible/lib/modules/rally/library/loader')
-#from loader.rally_loader import RallyLoader
+from rally.exceptions import RallyException
 
 DOCUMENTATION = '''
 ---
@@ -44,7 +42,10 @@ def main():
     module = AnsibleModule(argument_spec=module_args)
 
     is_error, has_changed, result = choice_map.get(module.params['command'] )(module.params)
-    module.exit_json(changed=False, meta=module.params)
+    if not is_error:
+        module.exit_json(changed=False, meta=module.params)
+    else:
+        module.fail_json()
 
 if __name__ == "__main__":
     main()
