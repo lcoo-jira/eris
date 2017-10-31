@@ -18,8 +18,12 @@
       name: test-deploy
       command: create
       from: file
+  - name: rally database
+    rally_db:
+      name: test-db
+      command: recreate
 
   - name: Task create
     rally_task:
       name: test-task
-      command: create    
+      command: create
