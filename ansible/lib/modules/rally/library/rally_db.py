@@ -1,9 +1,9 @@
 #! /usr/bin/env python 
 
 from ansible.module_utils.basic import *
-import sys
-
-from loader.rally_loader import RallyLoader
+import os, sys, pykka
+sys.path.append('home/dola/eris/ansible/lib/modules/rally/library/loader')
+#from loader.rally_loader import RallyLoader
 
 DOCUMENTATION = '''
 ---
