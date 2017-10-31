@@ -1,0 +1,30 @@
+{
+    "inventory_plugin": "eris.inventory.fuelinv",
+    "openstack_deployment": {
+	"fuel": {
+	    "ip": "130.3.195.21",
+	    "mac": "52:54:00:4f:79:35",
+	    "groups": ["grpfuel"],
+	    "type": "vm",
+	    "ansible_ssh_variables": {
+		"ansible_user": "root",
+		"ansible_become": "false",
+		"ansible_ssh_common_args": "-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null",
+		"ansible_ssh_private_key_file": "/home/gautam/anstest/etc/fuel_node.pem"
+	    }
+	},
+        "deployment_ssh": {
+            "ansible_ssh_common_args": "-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ProxyCommand=\"ssh -i /home/gautam/anstest/etc/fuel_node.pem -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -q -W %h:%p root@jump.host.local\"",
+            "ansible_ssh_private_key_file": "/home/gautam/anstest/etc/fuel_node.pem",
+            "ansible_user": "fuel",
+	    "ansible_become": "true"
+        },
+	"groups": {
+	},
+        "name": "test"
+    },
+    "rally": {
+	"deployment": "eris/tests/datafiles/test_rally.json",
+	"config": "eris/tests/datafiles/test_rally.conf"
+    }
+}

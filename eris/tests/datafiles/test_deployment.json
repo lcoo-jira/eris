@@ -1,0 +1,275 @@
+[
+    {
+        "groups": [ "grpfuel" ],
+	"ip": "130.3.195.21",
+	"mac": "52:54:00:4f:79:35",
+	"name": "fuel",
+	"type": "vm",
+	"ansible_ssh_variables": {
+		"ansible_user": "root",
+		"ansible_ssh_common_args": "-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null",
+		"ansible_become": "false"
+	}
+    },
+    {
+        "groups": [
+            "swift-storage"
+        ],
+        "ip": "172.24.91.136",
+        "mac": "52:54:00:40:1a:41",
+        "name": "swiftsre103",
+        "type": "vm"
+    },
+    {
+        "groups": [
+            "rabbitmq",
+            "mysql"
+        ],
+        "ip": "172.24.91.108",
+        "mac": "52:54:00:3c:45:fd",
+        "name": "dbngsre101",
+        "type": "vm"
+    },
+    {
+        "groups": [
+            "compute"
+        ],
+        "ip": "172.24.91.103",
+        "mac": "00:25:b5:40:1b:cf",
+        "name": "computesre103",
+        "type": "bare-metal"
+    },
+    {
+        "groups": [
+            "contrail-analytics",
+            "contrail-analytics-db"
+        ],
+        "ip": "172.24.91.118",
+        "mac": "52:54:00:f5:bb:f0",
+        "name": "contrailanalysre102",
+        "type": "vm"
+    },
+    {
+        "groups": [
+            "haproxy"
+        ],
+        "ip": "172.24.91.121",
+        "mac": "52:54:00:da:bf:8d",
+        "name": "haprsre102",
+        "type": "vm"
+    },
+    {
+        "groups": [
+            "compute"
+        ],
+        "ip": "172.24.91.138",
+        "mac": "00:25:b5:40:1a:bf",
+        "name": "computesre102",
+        "type": "bare-metal"
+    },
+    {
+        "groups": [
+            "haproxy"
+        ],
+        "ip": "172.24.91.132",
+        "mac": "52:54:00:eb:25:5d",
+        "name": "haprsre103",
+        "type": "vm"
+    },
+    {
+        "groups": [
+            "contrail-config",
+            "contrail-control",
+            "contrail-db"
+        ],
+        "ip": "172.24.91.116",
+        "mac": "52:54:00:fb:ae:d3",
+        "name": "contrailcntlsre102",
+        "type": "vm"
+    },
+    {
+        "groups": [
+            "contrail-config",
+            "contrail-control",
+            "contrail-db"
+        ],
+        "ip": "172.24.91.129",
+        "mac": "52:54:00:33:e5:45",
+        "name": "contrailcntlsre103",
+        "type": "vm"
+    },
+    {
+        "groups": [
+            "cinder-volume",
+            "controllers",
+            "swift-proxy"
+        ],
+        "ip": "172.24.91.113",
+        "mac": "52:54:00:38:ed:c0",
+        "name": "moscsre101",
+        "type": "vm"
+    },
+    {
+        "groups": [
+            "swift-storage"
+        ],
+        "ip": "172.24.91.115",
+        "mac": "52:54:00:8e:01:09",
+        "name": "swiftsre101",
+        "type": "vm"
+    },
+    {
+        "groups": [
+            "compute"
+        ],
+        "ip": "172.24.91.137",
+        "mac": "00:25:b5:40:1b:6f",
+        "name": "computesre101",
+        "type": "bare-metal"
+    },
+    {
+        "groups": [
+            "identity"
+        ],
+        "ip": "172.24.91.122",
+        "mac": "52:54:00:d6:b7:a4",
+        "name": "identitysre102",
+        "type": "vm"
+    },
+    {
+        "groups": [
+            "contrail-analytics",
+            "contrail-analytics-db"
+        ],
+        "ip": "172.24.91.128",
+        "mac": "52:54:00:fb:f6:34",
+        "name": "contrailanalysre103",
+        "type": "vm"
+    },
+    {
+        "groups": [
+            "cinder-volume",
+            "controllers",
+            "swift-proxy"
+        ],
+        "ip": "172.24.91.126",
+        "mac": "52:54:00:06:8a:7f",
+        "name": "moscsre102",
+        "type": "vm"
+    },
+    {
+        "groups": [
+            "contrail-config",
+            "contrail-control",
+            "contrail-db"
+        ],
+        "ip": "172.24.91.107",
+        "mac": "52:54:00:bd:25:3c",
+        "name": "contrailcntlsre101",
+        "type": "vm"
+    },
+    {
+        "groups": [
+            "rabbitmq",
+            "mysql"
+        ],
+        "ip": "172.24.91.131",
+        "mac": "52:54:00:0c:5f:4f",
+        "name": "dbngsre103",
+        "type": "vm"
+    },
+    {
+        "groups": [
+            "contrail-analytics",
+            "contrail-analytics-db"
+        ],
+        "ip": "172.24.91.139",
+        "mac": "52:54:00:b3:5a:25",
+        "name": "contrailanalysre101",
+        "type": "vm"
+    },
+    {
+        "groups": [
+            "identity"
+        ],
+        "ip": "172.24.91.133",
+        "mac": "52:54:00:87:57:7a",
+        "name": "identitysre103",
+        "type": "vm"
+    },
+    {
+        "groups": [
+            "cinder-volume",
+            "controllers",
+            "swift-proxy"
+        ],
+        "ip": "172.24.91.135",
+        "mac": "52:54:00:ae:f8:31",
+        "name": "moscsre103",
+        "type": "vm"
+    },
+    {
+        "groups": [
+            "haproxy"
+        ],
+        "ip": "172.24.91.110",
+        "mac": "52:54:00:46:d9:79",
+        "name": "haprsre101",
+        "type": "vm"
+    },
+    {
+        "groups": [
+            "mongo"
+        ],
+        "ip": "172.24.91.125",
+        "mac": "52:54:00:92:a4:16",
+        "name": "mongosre102",
+        "type": "vm"
+    },
+    {
+        "groups": [
+            "mongo"
+        ],
+        "ip": "172.24.91.134",
+        "mac": "52:54:00:cf:78:20",
+        "name": "mongosre103",
+        "type": "vm"
+    },
+    {
+        "groups": [
+            "identity"
+        ],
+        "ip": "172.24.91.111",
+        "mac": "52:54:00:fa:84:5e",
+        "name": "identitysre101",
+        "type": "vm"
+    },
+    {
+        "groups": [
+            "swift-storage"
+        ],
+        "ip": "172.24.91.127",
+        "mac": "52:54:00:c0:19:8d",
+        "name": "swiftsre102",
+        "type": "vm"
+    },
+    {
+        "groups": [
+            "mongo"
+        ],
+        "ip": "172.24.91.112",
+        "mac": "52:54:00:82:7d:7d",
+        "name": "mongosre101",
+        "type": "vm"
+    },
+    {
+        "groups": [
+            "rabbitmq",
+            "mysql"
+        ],
+        "ip": "172.24.91.119",
+        "mac": "52:54:00:d4:e0:b2",
+        "name": "dbngsre102",
+        "type": "vm"
+    }
+]
