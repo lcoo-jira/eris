@@ -1,4 +1,7 @@
 from ansible.module_utils.basic import *
+from rally import api as rally_api
+from rally.cli.commands.deployment import DeploymentCommands
+from rally.exceptions import DeploymentNotFound
 
 DOCUMENTATION = '''
 ---
@@ -6,16 +9,32 @@ module: rally
 short_description: Executes rally commands
 
 '''
+api = rally_api.API()
+deploymentCommand = DeploymentCommands()
+
 def create_deployment(data=None):
+    """Create deployment from file or enviroment variables"""
+    try
+        deploymentCommand.create(api, "name", fromenv=False, filename=None,
+                                 do_use=False)
+    except Exception as e:
+        pass
+
     meta = {"response" :  "hello"}
     return False, False, meta
 
 def destroy_deployment(data=None):
+    """Destroy deployment from file or enviroment variables"""
+    try:
+        deploymentCommand.destroy()
+    except Exception as e:
+        pass
+
     meta = {"response" :  "hello"}
     return False, False, meta
 
 def main():
-    module_args = { "name" : { type: "str", "required": True }, 
+    module_args = { "name" : { type: "str", "required": True },
                     "command" : {
                                 "required": True,
                                 type: "str",
@@ -25,11 +44,11 @@ def main():
                   }
 
     choice_map = {
-                    "create" : create_deployment, 
+                    "create" : create_deployment,
                     "destroy": destroy_deployment
                  }
     module = AnsibleModule(argument_spec=module_args)
-    is_error, has_changed, result = choice_map.get(module.params['command'] )(module.params) 
+    is_error, has_changed, result = choice_map.get(module.params['command'] )(module.params)
 
     if not is_error:
         module.exit_json(changed=False, meta=result )
