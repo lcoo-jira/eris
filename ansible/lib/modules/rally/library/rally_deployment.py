@@ -15,7 +15,7 @@ deploymentCommand = DeploymentCommands()
 
 def create_deployment(data=None):
     """Create deployment from file or enviroment variables"""
-    try
+    try:
         deploymentCommand.create(api, "name", fromenv=False, filename=None,
                                  do_use=False)
     except Exception as e:

@@ -23,7 +23,7 @@
       name: test-db
       command: recreate
 
-  - name: Task create
+  - name: Task Start
     rally_task:
       name: test-task
-      command: create
+      command: start
