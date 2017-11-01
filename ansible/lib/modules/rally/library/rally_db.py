@@ -4,6 +4,7 @@ from ansible.module_utils.basic import *
 from rally import api as rally_api
 from rally.cli.commands.db import DBCommands
 from rally.exceptions import RallyException
+from rally.common.db import db_api
 
 DOCUMENTATION = '''
 ---
@@ -12,22 +13,25 @@ short_description: Executes rally commands to manage db
 
 '''
 db = DBCommands()
-api = rally_api.API()
+#api = rally_api.API()
 
 def create_db(data=None):
     try:
-        db.create(api)
-    except Exception as e:
+        db.create("api")
+    except db_api.exception.DbMigrationError:
         pass
-    meta = {"hello": "deji"}
+    except RallyException as e:
+        pass
+
+    meta = {}
     return False, False, meta
 
 def recreate_db(data=None):
     try:
-        db.recreate(api)
-    except Exception as e:
+        db.recreate("api")
+    except RallyException as e:
         pass
-    meta = {"hello": "deji"}
+    meta = {}
     return False, False, meta
 
 def main():
@@ -36,16 +40,16 @@ def main():
                   }
 
     choice_map = {
-                        "create" : create_db,
-                        "recreate": recreate_db
-                     }
+                    "create" : create_db,
+                    "recreate": recreate_db
+                    }
     module = AnsibleModule(argument_spec=module_args)
 
     is_error, has_changed, result = choice_map.get(module.params['command'] )(module.params)
     if not is_error:
         module.exit_json(changed=False, meta=module.params)
     else:
-        module.fail_json()
+        module.fail_json(msg=module.params['command'])
 
 if __name__ == "__main__":
     main()

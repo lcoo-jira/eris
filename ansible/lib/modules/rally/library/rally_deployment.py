@@ -18,10 +18,14 @@ def create_deployment(data=None):
     try:
         deploymentCommand.create(api, "name", fromenv=False, filename=None,
                                  do_use=False)
+
     except Exception as e:
         pass
+    #deployment source
+    deployment_source = data.get('from')
 
-    meta = {"response" :  "hello"}
+
+    meta = {"response" : deployment_source }
     return False, False, meta
 
 def destroy_deployment(data=None):
@@ -41,7 +45,7 @@ def main():
                                 type: "str",
                                 "choices" : ["create", "destroy", "check", "list", "recreate"],
                                },
-                    "from" : {"requred": True, type: "str", "choices": ["file", "env"]}
+                    "from" : {"requred": True, type: 'dict'}
                   }
 
     choice_map = {

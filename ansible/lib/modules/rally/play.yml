@@ -4,7 +4,8 @@
   - name: Test module
     rally_mod:
       command: "create_deployment"
-      command_args: {'name':'deji'}
+      command_args:
+        name: 'deji'
     register: result
   - debug: var=result
 
@@ -17,7 +18,9 @@
     rally_deployment:
       name: test-deploy
       command: create
-      from: file
+      from:
+        file: "tempfile"
+
   - name: rally database
     rally_db:
       name: test-db
