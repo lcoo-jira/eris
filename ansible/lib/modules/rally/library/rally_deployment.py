@@ -19,7 +19,7 @@ def create_deployment(data=None):
     rc_file = data.get('from')
 
     try:
-        deploymentCommand.create(api, "name", fromenv=False, filename=None,
+        deploymentCommand.create(api, "name", fromenv=False, filename=rc_file,
                                  do_use=False)
 
     except Exception as e:
