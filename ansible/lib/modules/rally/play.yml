@@ -18,8 +18,7 @@
     rally_deployment:
       name: test-deploy
       command: create
-      from:
-        file: "tempfile"
+      from: "tempfile"
 
   - name: rally database
     rally_db:
