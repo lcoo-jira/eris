@@ -18,7 +18,7 @@
     rally_deployment:
       name: test-deploy
       command: create
-      from: openrc
+      from: /home/dola/eris/ansible/lib/modules/rally/library/openrc
 
   - name: rally database
     rally_db:
