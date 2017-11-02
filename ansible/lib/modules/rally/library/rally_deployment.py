@@ -20,10 +20,11 @@ def create_deployment(data=None):
     #deployment source
     rc_file = data.get('from')
     deployment_name = data.get('name')
-
-    deploymentCommand.create(api, deployment_name, fromenv=False, filename=rc_file,
-                                 do_use=False)
-
+    try:
+        deploymentCommand.create(api, deployment_name, fromenv=False, filename=rc_file,
+                             do_use=False)
+    except DeploymentNameExists:
+        raise ("Deployment already exist")
 
     meta = {"env_file" : rc_file, "deployment_name":deployment_name }
     return False, False, meta
