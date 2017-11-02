@@ -14,7 +14,7 @@ api = rally_api.API()
 deploymentCommand = DeploymentCommands()
 
 def create_deployment(data=None):
-"""Create deployment from RC file or enviroment variables"""
+    """Create deployment from RC file or enviroment variables"""
     #deployment source
     rc_file = data.get('from')
 
