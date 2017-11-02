@@ -14,18 +14,19 @@ api = rally_api.API()
 deploymentCommand = DeploymentCommands()
 
 def create_deployment(data=None):
-    """Create deployment from file or enviroment variables"""
+"""Create deployment from RC file or enviroment variables"""
+    #deployment source
+    rc_file = data.get('from')
+
     try:
         deploymentCommand.create(api, "name", fromenv=False, filename=None,
                                  do_use=False)
 
     except Exception as e:
         pass
-    #deployment source
-    deployment_source = data.get('from')
 
 
-    meta = {"response" : deployment_source }
+    meta = {"response" : rc_file }
     return False, False, meta
 
 def destroy_deployment(data=None):
@@ -39,13 +40,13 @@ def destroy_deployment(data=None):
     return False, False, meta
 
 def main():
-    module_args = { "name" : { type: "str", "required": True },
+    module_args = { "name" : {"required": True, type: "str" },
                     "command" : {
                                 "required": True,
                                 type: "str",
                                 "choices" : ["create", "destroy", "check", "list", "recreate"],
                                },
-                    "from" : {"requred": True, type: 'dict'}
+                    "from" : {"requred": True, type: 'str'}
                   }
 
     choice_map = {
