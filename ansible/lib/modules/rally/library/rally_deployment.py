@@ -1,3 +1,5 @@
+#! /usr/bin/env python
+
 from ansible.module_utils.basic import *
 from rally import api as rally_api
 from rally.cli.commands.deployment import DeploymentCommands
@@ -17,22 +19,19 @@ def create_deployment(data=None):
     """Create deployment from RC file or enviroment variables"""
     #deployment source
     rc_file = data.get('from')
+    deployment_name = data.get('name')
 
-    try:
-        deploymentCommand.create(api, "name", fromenv=False, filename=rc_file,
+    deploymentCommand.create(api, deployment_name, fromenv=False, filename=rc_file,
                                  do_use=False)
 
-    except Exception as e:
-        pass
 
-
-    meta = {"response" : rc_file }
+    meta = {"env_file" : rc_file, "deployment_name":deployment_name }
     return False, False, meta
 
 def destroy_deployment(data=None):
     """Destroy deployment from file or enviroment variables"""
     try:
-        deploymentCommand.destroy()
+        deploymentCommand.destroy(self, api, deployment=None)
     except Exception as e:
         pass
 
