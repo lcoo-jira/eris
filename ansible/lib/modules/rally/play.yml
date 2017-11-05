@@ -1,31 +1,25 @@
 ---
 - hosts: localhost
   tasks:
-  - name: Test module
-    rally_mod:
-      command: "create_deployment"
-      command_args:
-        name: 'deji'
-    register: result
-  - debug: var=result
-
-  - name: rally database
+  - name: Create rally database
     rally_db:
       name: test-db
       command: create
 
-  - name: rally deployment
+  - name: Create rally deployment
     rally_deployment:
       name: test-deploy
       command: create
-      from: /home/dola/eris/ansible/lib/modules/rally/library/openrc
-
-  - name: rally database
-    rally_db:
-      name: test-db
-      command: recreate
+      from: /home/dola/eris/ansible/lib/modules/rally/library/openrc.json
 
   - name: Task Start
     rally_task:
       name: test-task
       command: start
+      deployment: test-deploy
+      scenario_file: /tmp/boot-and-delete.yaml
+
+  - name: Recreate rally database
+    rally_db:
+      name: test-db
+      command: recreate

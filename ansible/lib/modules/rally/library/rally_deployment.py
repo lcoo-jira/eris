@@ -5,6 +5,7 @@ from rally import api as rally_api
 from rally.cli.commands.deployment import DeploymentCommands
 from rally.exceptions import DeploymentNotFound
 from rally.exceptions import RallyException
+from rally.exceptions import DeploymentNameExists
 
 DOCUMENTATION = '''
 ---
@@ -25,6 +26,10 @@ def create_deployment(data=None):
                              do_use=False)
     except DeploymentNameExists:
         raise ("Deployment already exist")
+
+    """except Exception as e:
+        print(e)
+        """
 
     meta = {"env_file" : rc_file, "deployment_name":deployment_name }
     return False, False, meta
