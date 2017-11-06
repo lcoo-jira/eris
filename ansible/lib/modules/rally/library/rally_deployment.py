@@ -32,7 +32,7 @@ def create_deployment(data=None):
         """
 
     meta = {"env_file" : rc_file, "deployment_name":deployment_name }
-    return False, False, meta
+    return False, False, meta, error_msg
 
 def destroy_deployment(data=None):
     """Destroy deployment from file or enviroment variables"""
@@ -42,7 +42,7 @@ def destroy_deployment(data=None):
         pass
 
     meta = {"response" :  "hello"}
-    return False, False, meta
+    return False, False, meta, error_msg
 
 def main():
     module_args = { "name" : {"required": True, type: "str" },
@@ -59,12 +59,12 @@ def main():
                     "destroy": destroy_deployment
                  }
     module = AnsibleModule(argument_spec=module_args)
-    is_error, has_changed, result = choice_map.get(module.params['command'] )(module.params)
+    is_error, has_changed, result, error_msg = choice_map.get(module.params['command'] )(module.params)
 
     if not is_error:
         module.exit_json(changed=False, meta=result )
     else:
-        module.fail_json(msg="Error ", meta = result)
+        module.fail_json(msg=error_msg, meta=result)
 
 if __name__ == "__main__":
     main()

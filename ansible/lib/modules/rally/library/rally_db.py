@@ -20,19 +20,19 @@ def create_db(data=None):
         db.create("api")
     except db_api.exception.DbMigrationError:
         pass
-    except RallyException as e:
+    except RallyException as error_msg :
         pass
 
     meta = {}
-    return False, False, meta
+    return False, False, meta, error_msg
 
 def recreate_db(data=None):
     try:
         db.recreate("api")
-    except RallyException as e:
+    except RallyException as error_msg:
         pass
     meta = {}
-    return False, False, meta
+    return False, False, meta, error_msg
 
 def main():
     module_args = { "name": { "required": True, type: "str" },
@@ -49,7 +49,7 @@ def main():
     if not is_error:
         module.exit_json(changed=False, meta=module.params)
     else:
-        module.fail_json(msg=module.params['command'])
+        module.fail_json(msg=error_msg, meta=result)
 
 if __name__ == "__main__":
     main()
