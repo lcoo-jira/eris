@@ -10,7 +10,7 @@
     rally_deployment:
       name: test-deploy
       command: create
-      from: /home/dola/eris/ansible/lib/modules/rally/library/openrc.json
+      from: /tmp/openrc.json
 
   - name: Task Start
     rally_task:

@@ -16,6 +16,7 @@ db = DBCommands()
 #api = rally_api.API()
 
 def create_db(data=None):
+    error_msg = ""
     try:
         db.create("api")
     except db_api.exception.DbMigrationError:
@@ -27,6 +28,7 @@ def create_db(data=None):
     return False, False, meta, error_msg
 
 def recreate_db(data=None):
+    error_msg = ""
     try:
         db.recreate("api")
     except RallyException as error_msg:
@@ -45,7 +47,7 @@ def main():
                     }
     module = AnsibleModule(argument_spec=module_args)
 
-    is_error, has_changed, result = choice_map.get(module.params['command'] )(module.params)
+    is_error, has_changed, result, error_msg = choice_map.get(module.params['command'] )(module.params)
     if not is_error:
         module.exit_json(changed=False, meta=module.params)
     else:

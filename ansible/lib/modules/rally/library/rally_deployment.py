@@ -18,6 +18,7 @@ deploymentCommand = DeploymentCommands()
 
 def create_deployment(data=None):
     """Create deployment from RC file or enviroment variables"""
+    error_msg = ""
     #deployment source
     rc_file = data.get('from')
     deployment_name = data.get('name')
@@ -35,10 +36,11 @@ def create_deployment(data=None):
     return False, False, meta, error_msg
 
 def destroy_deployment(data=None):
+    error_msg = ""
     """Destroy deployment from file or enviroment variables"""
     try:
         deploymentCommand.destroy(self, api, deployment=None)
-    except Exception as e:
+    except Exception as error_msg:
         pass
 
     meta = {"response" :  "hello"}
