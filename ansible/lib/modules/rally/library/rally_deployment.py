@@ -19,6 +19,7 @@ deploymentCommand = DeploymentCommands()
 def create_deployment(data=None):
     """Create deployment from RC file or enviroment variables"""
     error_msg = ""
+    is_error = False
     #deployment source
     rc_file = data.get('from')
     deployment_name = data.get('name')
@@ -28,23 +29,42 @@ def create_deployment(data=None):
     except DeploymentNameExists:
         raise ("Deployment already exist")
 
-    """except Exception as e:
-        print(e)
-        """
+    except Exception as e:
+        error_msg = e
+        is_error = True
+
 
     meta = {"env_file" : rc_file, "deployment_name":deployment_name }
-    return False, False, meta, error_msg
+    return is_error, False, meta, error_msg
 
 def destroy_deployment(data=None):
-    error_msg = ""
     """Destroy deployment from file or enviroment variables"""
-    try:
-        deploymentCommand.destroy(self, api, deployment=None)
-    except Exception as error_msg:
-        pass
+    error_msg = ""
+    is_error = False
+    meta = {}
+    deployment_name = data.get('name')
 
-    meta = {"response" :  "hello"}
-    return False, False, meta, error_msg
+    try:
+        deploymentCommand.destroy(api, deployment=deployment_name)
+    except Exception as e:
+        error_msg = e
+        is_error = True
+    return is_error, False, meta, error_msg
+
+def list_deployment(data=None):
+    """Destroy deployment from file or enviroment variables"""
+    error_msg = ""
+    is_error = False
+    meta = {}
+    deployment_name = data.get('name')
+    try:
+        deploymentCommand.list(api, deployment_list=None)
+    except Exception as e:
+        error_msg = e
+        is_error = True
+    return is_error, False, meta, error_msg
+
+
 
 def main():
     module_args = { "name" : {"required": True, type: "str" },
