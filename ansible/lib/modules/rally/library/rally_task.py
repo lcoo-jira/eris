@@ -1,3 +1,5 @@
+#! /usr/bin/env python
+
 from ansible.module_utils.basic import *
 from rally.cli.commands import task as task_cli
 from rally.exceptions import RallyException
