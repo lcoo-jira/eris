@@ -1,0 +1,15 @@
+export OS_USERNAME="admin"
+export OS_PASSWORD="fr1end$"
+
+export OS_AUTH_URL="http://10.0.0.200:5000/v2.0"
+export OS_TENANT_NAME="admin"
+export OS_REGION_NAME="RegionOne"
+export OS_PROJECT_ID="7d99f322b597483eba78c3932b70d204"
+export OS_USER_DOMAIN_NAME="Default"
+#export OS_ENDPOINT_TYPE=""
+# export OS_ENDPOINT=""
+
+# export OS_CACERT
+# export OS_INSECURE
+# export OS_IDENTITY_API_VERSION
+#export OS_AUTH_URL=http://keystone.fuel.local:35357/v2.0

@@ -1,4 +1,4 @@
 rally
-volutuous
+voluptuous
 pykka
 nose
