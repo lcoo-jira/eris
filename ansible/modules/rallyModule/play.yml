@@ -17,7 +17,7 @@
       name: test-task
       command: start
       deployment: test-deploy
-      scenario_file: /tmp/create-and-delete-floating-ips.yaml
+      scenario_file: /tmp/boot-and-delete.yaml
 
   - name: Recreate rally database
     rally_db:
