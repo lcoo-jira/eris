@@ -25,13 +25,14 @@ def start_task(data=None):
         taskCommand.start(api, scenario_file, deployment=deployment, task_args=None,
                        task_args_file=None,
                        tags=None, do_use=False, abort_on_sla_failure=False)
-    except DeploymentNotFound as error_msg:
-        pass
+    except DeploymentNotFound as e:
+        error_msg = e
+        is_error = True
     except RallyException as e:
         error_msg = e
         is_error = True
 
-    meta = {"response" :  "hello"}
+    meta = {}
     return is_error, False, meta, error_msg
 
 def delete_task(data=None):
