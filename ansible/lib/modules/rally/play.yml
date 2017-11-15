@@ -1,7 +1,0 @@
----
-- hosts: localhost
-  tasks:
-  - name: Test module
-    test:
-    register: result
-  - debug: var=result

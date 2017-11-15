@@ -1,0 +1,19 @@
+{
+    "inventory_plugin": "eris.inventory.fileinv",
+    "openstack_deployment": {
+        "deployment_map": "eris/tests/datafiles/test_deployment.json",
+        "deployment_ssh": {
+            "ansible_ssh_common_args": "-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ProxyCommand=\"ssh -i /home/gautam/anstest/etc/fuel_node.pem -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -q -W %h:%p root@jump.host.local\"",
+            "ansible_ssh_private_key_file": "./test_pkey.pem",
+            "ansible_user": "tuser",
+	    "ansible_become": "true"
+        },
+	"groups": {
+	},
+        "name": "test"
+    },
+    "rally": {
+	"deployment": "eris/tests/datafiles/test_rally.json",
+	"config": "eris/tests/datafiles/test_rally.conf"
+    }
+}
