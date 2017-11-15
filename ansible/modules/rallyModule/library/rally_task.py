@@ -21,10 +21,13 @@ def start_task(data=None):
     error_msg = ""
     scenario_file = data.get('scenario_file')
     deployment = data.get('deployment')
+    is_error = False
+    changed = False
     try:
         taskCommand.start(api, scenario_file, deployment=deployment, task_args=None,
                        task_args_file=None,
                        tags=None, do_use=False, abort_on_sla_failure=False)
+        changed = True
     except DeploymentNotFound as e:
         error_msg = e
         is_error = True
@@ -33,31 +36,35 @@ def start_task(data=None):
         is_error = True
 
     meta = {}
-    return is_error, False, meta, error_msg
+    return is_error, changed, meta, error_msg
 
 def delete_task(data=None):
     """ Delete rally task """
     error_msg = ""
     is_error = False
+    changed = False
     meta = {}
     try:
         taskCommand.delete(api, task_id=None, force=False)
+        changed = True
     except RallyException as e:
         error_msg = e
         is_error = True
-    return is_error, False, meta, error_msg
+    return is_error, changed, meta, error_msg
 
 def list_task(data=None):
     """ List tasks """
     error_msg = ""
     is_error = False
+    changed = False
     meta = {}
     try:
         taskCommand.list(api, task_id=None, force=False)
+        changed = True
     except RallyException as e:
         error_msg = e
         is_error = True
-    return False, False, meta, error_msg
+    return is_error, changed, meta, error_msg
 
 def main():
     module_args = {
