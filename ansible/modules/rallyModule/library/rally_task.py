@@ -17,6 +17,32 @@ taskCommand = task_cli.TaskCommands()
 api = rally_api.API()
 
 def start_task(data=None):
+    """Create a task to get the UUID"""
+    task_uuid = api._Task.create()
+    task_api = rally_api._Task(api)
+
+    #Get deployment name
+    deployment = data.get('deployment')
+    #Create task
+    task_attributes = task_api.create()
+
+    task_uuid = task_attributes.get('deployment_uuid')
+
+
+    error_msg = ""
+    scenario_file = data.get('scenario_file')
+    deployment = data.get('deployment')
+    is_error = False
+    changed = False
+
+    #Start task
+    task_run = task_api.start(deployment, {}, task=task_uuid, abort_on_sla_failure=False)
+
+
+
+
+"""
+def start_task(data=None):
     """Start a task based on the scenario file"""
     error_msg = ""
     scenario_file = data.get('scenario_file')
@@ -37,6 +63,7 @@ def start_task(data=None):
 
     meta = {}
     return is_error, changed, meta, error_msg
+"""
 
 def delete_task(data=None):
     """ Delete rally task """
