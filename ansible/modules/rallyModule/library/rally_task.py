@@ -22,12 +22,12 @@ def start_task(data=None):
     scenario_file = data.get('scenario_file')
     deployment = data.get('deployment')
     is_error = False
-    changed = False
+    has_changed = False
     try:
         taskCommand.start(api, scenario_file, deployment=deployment, task_args=None,
                        task_args_file=None,
                        tags=None, do_use=False, abort_on_sla_failure=False)
-        changed = True
+        has_changed = True
     except DeploymentNotFound as e:
         error_msg = e
         is_error = True
@@ -36,35 +36,35 @@ def start_task(data=None):
         is_error = True
 
     meta = {}
-    return is_error, changed, meta, error_msg
+    return is_error, has_changed, meta, error_msg
 
 def delete_task(data=None):
     """ Delete rally task """
     error_msg = ""
     is_error = False
-    changed = False
+    has_changed = False
     meta = {}
     try:
         taskCommand.delete(api, task_id=None, force=False)
-        changed = True
+        has_changed = True
     except RallyException as e:
         error_msg = e
         is_error = True
-    return is_error, changed, meta, error_msg
+    return is_error, has_changed, meta, error_msg
 
 def list_task(data=None):
     """ List tasks """
     error_msg = ""
     is_error = False
-    changed = False
+    has_changed = False
     meta = {}
     try:
         taskCommand.list(api, task_id=None, force=False)
-        changed = True
+        has_changed = True
     except RallyException as e:
         error_msg = e
         is_error = True
-    return is_error, changed, meta, error_msg
+    return is_error, has_changed, meta, error_msg
 
 def main():
     module_args = {
@@ -84,7 +84,7 @@ def main():
     is_error, has_changed, result, error_msg = choice_map.get(module.params['command'] )(module.params)
 
     if not is_error:
-        module.exit_json(changed=False, meta=result)
+        module.exit_json(changed=has_changed, meta=result)
     else:
         module.fail_json(msg=error_msg, meta=result)
 
