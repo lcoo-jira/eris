@@ -5,6 +5,7 @@ from rally.cli.commands import task as task_cli
 from rally.exceptions import RallyException
 from rally.exceptions import DeploymentNotFound
 from rally import api as rally_api
+from rally.exceptions import TaskNotFound
 
 DOCUMENTATION = '''
 ---
@@ -12,38 +13,55 @@ module: rally
 short_description: Executes rally commands
 
 '''
-
 taskCommand = task_cli.TaskCommands()
 api = rally_api.API()
 
 def start_task(data=None):
+    scenario_file = data.get('scenario_file')
+    deployment = data.get('deployment')
+    error_msg = ""
+    is_error = False
+    has_changed = False
+    meta = {}
+
     """Create a task to get the UUID"""
-    task_uuid = api._Task.create()
+
     task_api = rally_api._Task(api)
+
+    #Load scenario_file
+    scenaro_config = taskCommand._load_and_validate_task(api, scenario_file)
 
     #Get deployment name
     deployment = data.get('deployment')
     #Create task
-    task_attributes = task_api.create()
+    try:
+        task_object = task_api.create(deployment)
+        #Get task task uuid
+        task_uuid = task_object.get('uuid')
+        meta ['uuid'] = task_uuid
 
-    task_uuid = task_attributes.get('deployment_uuid')
-
-
-    error_msg = ""
-    scenario_file = data.get('scenario_file')
-    deployment = data.get('deployment')
-    is_error = False
-    changed = False
+    except RallyException as e:
+        error_msg = e
+        is_error = True
 
     #Start task
-    task_run = task_api.start(deployment, {}, task=task_uuid, abort_on_sla_failure=False)
+    try:
+        task_run = task_api.start(deployment, scenaro_config, task_uuid, abort_on_sla_failure=False)
+        has_changed = True
+    except TaskNotFound as e:
+        error_msg = e
+        is_error = True
+    except Exception as e:
+        error_msg = e
+        is_error = True
 
 
-
+    return is_error, has_changed, meta, error_msg
 
 """
 def start_task(data=None):
-    """Start a task based on the scenario file"""
+    Start a task based on the scenario file
+
     error_msg = ""
     scenario_file = data.get('scenario_file')
     deployment = data.get('deployment')
@@ -62,12 +80,7 @@ def start_task(data=None):
         is_error = True
 
     meta = {}
-<<<<<<< HEAD
-    return is_error, has_changed, meta, error_msg
-=======
-    return is_error, changed, meta, error_msg
-"""
->>>>>>> d452c90982c7cfe98583429e9f8566b67593d65e
+    return is_error, has_changed, meta, error_msg """
 
 def delete_task(data=None):
     """ Delete rally task """
