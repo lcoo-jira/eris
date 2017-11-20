@@ -7,7 +7,6 @@ from rally.exceptions import DeploymentNotFound
 from rally import api as rally_api
 from rally.exceptions import TaskNotFound
 
-
 DOCUMENTATION = '''
 ---
 module: rally
@@ -17,34 +16,50 @@ short_description: Executes rally commands
 taskCommand = task_cli.TaskCommands()
 api = rally_api.API()
 
-def start_task(data=None):
-    scenario_file = data.get('scenario_file')
-    deployment = data.get('deployment')
+def create_task(data=None):
     error_msg = ""
     is_error = False
     has_changed = False
     meta = {}
-
+    ansible_facts = {}
     """Create a task to get the UUID"""
-
-    task_api = rally_api._Task(api)
-
-    #Load scenario_file
-    scenaro_config = taskCommand._load_and_validate_task(api, scenario_file)
-
     #Get deployment name
     deployment = data.get('deployment')
-    #Create task
+
+    #Create task API
+    task_api = rally_api._Task(api)
+
+    #Create task object and get UUID
     try:
         task_object = task_api.create(deployment)
-        #Get task task uuid
-        task_uuid = task_object.get('deployment_uuid')
+        task_uuid = task_object.get('uuid')
         meta ['uuid'] = task_uuid
+        ansible_facts = {"task_uuid" : task_uuid}
 
     except Exception as e:
         error_msg = e
         is_error = True
 
+    return is_error, has_changed, meta, error_msg, ansible_facts
+
+
+def start_task(data=None):
+    """Start a pre created task using the UUID"""
+
+    scenario_file = data.get('scenario_file')
+    #Get deployment name
+    deployment = data.get('deployment')
+    task_uuid = data.get('task_uuid')
+    error_msg = ""
+    is_error = False
+    has_changed = False
+    meta = {}
+    ansible_facts = {}
+    #Load scenario_file
+    scenaro_config = taskCommand._load_and_validate_task(api, scenario_file)
+
+    #Create task API
+    task_api = rally_api._Task(api)
     #Start task
     try:
         task_run = task_api.start(deployment, scenaro_config, task_uuid, abort_on_sla_failure=False)
@@ -56,7 +71,7 @@ def start_task(data=None):
         error_msg = e
         is_error = True
 
-    return is_error, has_changed, meta, error_msg
+    return is_error, has_changed, meta, error_msg, ansible_facts
 
 """
 def start_task(data=None):
@@ -80,7 +95,7 @@ def start_task(data=None):
         is_error = True
 
     meta = {}
-    return is_error, has_changed, meta, error_msg """
+    return is_error, has_changed, meta, error_msg, ansible_facts """
 
 def delete_task(data=None):
     """ Delete rally task """
@@ -88,13 +103,14 @@ def delete_task(data=None):
     is_error = False
     has_changed = False
     meta = {}
+    ansible_facts = {}
     try:
         taskCommand.delete(api, task_id=None, force=False)
         has_changed = True
     except RallyException as e:
         error_msg = e
         is_error = True
-    return is_error, has_changed, meta, error_msg
+    return is_error, has_changed, meta, error_msg, ansible_facts
 
 def list_task(data=None):
     """ List tasks """
@@ -102,13 +118,14 @@ def list_task(data=None):
     is_error = False
     has_changed = False
     meta = {}
+    ansible_facts = {}
     try:
         taskCommand.list(api, task_id=None, force=False)
         has_changed = True
     except RallyException as e:
         error_msg = e
         is_error = True
-    return is_error, has_changed, meta, error_msg
+    return is_error, has_changed, meta, error_msg, ansible_facts
 
 def main():
     module_args = {
@@ -117,18 +134,20 @@ def main():
                                   "delete", "check", "list", "recreate"] ,
                                type: "str", "require": True },
                    "scenario_file": { type: "str", "required": True },
-                   "deployment": { type: "str", "required": True }
+                   "deployment": { type: "str", "required": True },
+                   "task_uuid": { type: "str", "required": False }
                   }
     choice_map = {
                     "start" : start_task,
-                    "delete": delete_task
+                    "delete": delete_task,
+                    "create": create_task
                  }
     module = AnsibleModule(argument_spec=module_args)
 
-    is_error, has_changed, result, error_msg = choice_map.get(module.params['command'] )(module.params)
+    is_error, has_changed, result, error_msg, ansible_facts = choice_map.get(module.params['command'] )(module.params)
 
     if not is_error:
-        module.exit_json(changed=has_changed, meta=result)
+        module.exit_json(changed=has_changed, meta=result, ansible_facts=ansible_facts)
     else:
         module.fail_json(msg=error_msg, meta=result)
 
