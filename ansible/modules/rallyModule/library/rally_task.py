@@ -7,6 +7,7 @@ from rally.exceptions import DeploymentNotFound
 from rally import api as rally_api
 from rally.exceptions import TaskNotFound
 
+
 DOCUMENTATION = '''
 ---
 module: rally
@@ -37,10 +38,10 @@ def start_task(data=None):
     try:
         task_object = task_api.create(deployment)
         #Get task task uuid
-        task_uuid = task_object.get('uuid')
+        task_uuid = task_object.get('deployment_uuid')
         meta ['uuid'] = task_uuid
 
-    except RallyException as e:
+    except Exception as e:
         error_msg = e
         is_error = True
 
@@ -54,7 +55,6 @@ def start_task(data=None):
     except Exception as e:
         error_msg = e
         is_error = True
-
 
     return is_error, has_changed, meta, error_msg
 
