@@ -20,6 +20,8 @@
       deployment: test-deploy
       scenario_file: /tmp/boot-and-delete.yaml
 
+  - debug: var=task_uuid
+
   - name: Task Start
     rally_task:
       name: test-task
