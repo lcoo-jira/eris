@@ -149,7 +149,7 @@ def main():
     if not is_error:
         module.exit_json(changed=has_changed, meta=result, ansible_facts=ansible_facts)
     else:
-        module.fail_json(msg=error_msg, meta=result)
+        module.fail_json(msg=error_msg, meta=result, ansible_facts=ansible_facts )
 
 if __name__ == "__main__":
     main()
