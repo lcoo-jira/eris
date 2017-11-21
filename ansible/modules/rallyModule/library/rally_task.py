@@ -16,6 +16,9 @@ short_description: Executes rally commands
 taskCommand = task_cli.TaskCommands()
 api = rally_api.API()
 
+#Create task API
+task_api = rally_api._Task(api)
+
 def create_task(data=None):
     error_msg = ""
     is_error = False
@@ -25,9 +28,6 @@ def create_task(data=None):
     """Create a task to get the UUID"""
     #Get deployment name
     deployment = data.get('deployment')
-
-    #Create task API
-    task_api = rally_api._Task(api)
 
     #Create task object and get UUID
     try:
@@ -58,8 +58,6 @@ def start_task(data=None):
     #Load scenario_file
     scenaro_config = taskCommand._load_and_validate_task(api, scenario_file)
 
-    #Create task API
-    task_api = rally_api._Task(api)
     #Start task
     try:
         task_run = task_api.start(deployment, scenaro_config, task_uuid, abort_on_sla_failure=False)

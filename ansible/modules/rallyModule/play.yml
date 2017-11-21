@@ -18,7 +18,8 @@
       name: task-create
       command: create
       deployment: test-deploy
-      scenario_file: /tmp/boot-and-delete.yaml
+      #scenario_file: /tmp/boot-and-delete.yaml
+      scenario_file: /tmp/create-and-delete-floating-ips.yaml
 
   - debug: var=task_uuid
 
@@ -28,9 +29,10 @@
       command: start
       task_uuid: "{{task_uuid}}"
       deployment: test-deploy
-      scenario_file: /tmp/boot-and-delete.yaml
+      #scenario_file: /tmp/boot-and-delete.yaml
+      scenario_file: /tmp/create-and-delete-floating-ips.yaml
 
-  - name: Recreate rally database
-    rally_db:
-      name: test-db
-      command: recreate
+#  - name: Recreate rally database
+#    rally_db:
+#      name: test-db
+#      command: recreate

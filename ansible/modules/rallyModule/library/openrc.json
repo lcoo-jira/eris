@@ -5,7 +5,7 @@
         "endpoint_type": "public",
         "admin": {
             "username": "admin",
-            "password": "fr1end$",
+            "password": "pasword",
             "project_domain_name": "Default",
             "project_name": "admin",
             "user_domain_name": "Default",

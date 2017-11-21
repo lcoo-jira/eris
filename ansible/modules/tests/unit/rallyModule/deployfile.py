@@ -15,5 +15,4 @@ def test_db_created():
     pass
 
 def test_credential_file_exists():
-
     pass
