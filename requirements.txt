@@ -5,4 +5,5 @@
 pbr>=2.0 # Apache-2.0
 
 # Openstack requirements
+ansible>=2.4 # BSD
 rally>=0.9.1 # OpenStack rally benchmarking.
