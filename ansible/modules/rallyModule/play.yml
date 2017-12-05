@@ -1,0 +1,38 @@
+---
+- hosts: localhost
+  gather_facts: True
+  tasks:
+  - name: Create rally database
+    rally_db:
+      name: test-db
+      command: create
+
+  - name: Create rally deployment
+    rally_deployment:
+      name: test-deploy
+      command: create
+      from: /tmp/openrc.json
+
+  - name: Create a Task
+    rally_task:
+      name: task-create
+      command: create
+      deployment: test-deploy
+      #scenario_file: /tmp/boot-and-delete.yaml
+      scenario_file: /tmp/create-and-delete-floating-ips.yaml
+
+  - debug: var=task_uuid
+
+  - name: Task Start
+    rally_task:
+      name: test-task
+      command: start
+      task_uuid: "{{task_uuid}}"
+      deployment: test-deploy
+      #scenario_file: /tmp/boot-and-delete.yaml
+      scenario_file: /tmp/create-and-delete-floating-ips.yaml
+
+#  - name: Recreate rally database
+#    rally_db:
+#      name: test-db
+#      command: recreate
