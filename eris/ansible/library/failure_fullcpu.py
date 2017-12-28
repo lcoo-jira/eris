@@ -32,10 +32,11 @@ def main():
                 at_once: Ignore the min_cpu, burn all cpu's to start with.
                 exponential: Start with min_cpu and burn 2, 4, 8, ... CPUs until
                              max cpu's are burnt.
-                linear: Start with min_cpu and increment 1 CPU burn until max_cpu
+                linear: Start with min_cpu and burn 1, 2, 3, ... until max_cpu
                         are burnt.
                 random: Start with min_cpu and burn a random number of CPUs
                         until max_cpus are burnt.
+                constant: Start with min_cpu and increase 1 at a time until max_cpu
     interval: The wait interval between each burn when getting from min_cpu
               to max_cpu. N/A for at_once.
     nice_value: The Linux nice_value to set the burn processes. This will
@@ -60,7 +61,7 @@ def main():
                          default=total_cpus, type='int'),
             duration=dict(required=True, type='int'),
             burn_model=dict(required=False, default='at_once',
-                            choices=['at_once', 'exponential', 'linear', 'random']),
+                            choices=['at_once', 'exponential', 'linear', 'random', 'constant']),
             interval=dict(required=False, default=60, type='int'),
             nice_value=dict(required=False, default=0, type='int'),
             dry_run=dict(required=False, default=False, type='bool'),
@@ -118,14 +119,14 @@ def main():
         output['burn_sequence'].append(max_cpu)
     else:
         # Use j for linear and exponential growth
-        j = 1
+        j = 0
         # Use k as a counter from min_cpu to max_cpu
-        k = min_cpu
+        burn_cpu = min_cpu
         # Keep track of the last update to k with burn_cpu
         # Initialize to 1 so that at there is no infinite loop
-        burn_cpu = k
+        k = burn_cpu
 
-        while k < max_cpu:
+        while k <= max_cpu:
             pool_list.append((pool.Pool(burn_cpu), burn_cpu))
             output['burn_sequence'].append(burn_cpu)
 
@@ -135,12 +136,24 @@ def main():
                 burn_cpu = 2 ** j
             elif burn_model == 'linear':
                 burn_cpu = j
-            elif burn_model == 'random':
+            elif burn_model == 'random' and max_cpu > k:
+                # NOTE: So this is a bit of a hack but it needs to be there
+                # randint works only if max_cpu>k, i.e. max_cpu-k > 1
+                # If max_cpu=k, we don't initialize a new burn_cpu
+                # But notice that at the end k+= burn_cpu is still done
+                # This is because we need to break out of the loop
+                # Once that is accomplished, we can check in the
+                # if statement below past the while loop. That won't be true
+                # since k - burn_cpu = max_cpu.
                 burn_cpu = random.randint(1, max_cpu-k)
+            elif burn_model == 'constant':
+                burn_cpu = 1
 
             k += burn_cpu
 
-        if k > max_cpu:
+        if k - burn_cpu < max_cpu:
+            # if k-burn_cpu < max_cpu then we know the last increment
+            # puts it past max_cpu.
             # Reduce by the number of CPUs incremented in the last iteration
             k = k - burn_cpu
             # Get the remaining CPUs till max_cpu
